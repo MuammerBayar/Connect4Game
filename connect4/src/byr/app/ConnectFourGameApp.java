@@ -1,6 +1,6 @@
 package byr.app;
 
-import byr.gui.EntrancePanel;
+import byr.gamepanel.EntrancePanel;
 
 public class ConnectFourGameApp {
     public static void run()

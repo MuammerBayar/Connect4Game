@@ -1,4 +1,4 @@
-package byr.gui;
+package byr.gamepanel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,10 +6,10 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.*;
 
-import static byr.gui.Player.PLAYER1;
-import static byr.gui.Player.PLAYER2;
+import static byr.gamepanel.Player.PLAYER1;
+import static byr.gamepanel.Player.PLAYER2;
 
-public class GamePanel extends JFrame {
+public class NewGame extends JFrame {
     private JLabel playerLabel;
     private JButton[][] board;
     private JButton exitButton;
@@ -23,6 +23,7 @@ public class GamePanel extends JFrame {
 
 
     private Player currentPlayer;
+    private Player nextPlayer;
     private Player[][] gameBoard;
 
     private void setPlayer()
@@ -32,24 +33,45 @@ public class GamePanel extends JFrame {
 
         Random r = new Random();
         currentPlayer = r.nextBoolean() ? PLAYER1 : PLAYER2;
-    }
+        nextPlayer = currentPlayer.equals(PLAYER1) ? PLAYER2 : PLAYER1;
 
-    public GamePanel() {
+        playerLabel.setText(currentPlayer.getPlayerName());
+        playerLabel.setForeground(currentPlayer.getPlayerColor());
+    }
+    private void setFrame()
+    {
         setTitle("Connect 4 Game");
         setSize(500, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        setPlayer();
-        // Create top panel with player label and new game button
+    }
+    private void addComponent()
+    {
         topPanel = new JPanel();
-        playerLabel = new JLabel(currentPlayer.getPlayerName());
-
+        playerLabel = new JLabel();
         topPanel.add(playerLabel);
 
-        // Create board panel with buttons for each cell
         boardPanel = new JPanel(new GridLayout(ROWS, COLUMNS));
         board = new JButton[ROWS][COLUMNS];
+
+        bottomPanel = new JPanel();
+        exitButton = new JButton("ÇIKIŞ");
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RecordGame.run();
+                EntrancePanel.frame.setVisible(true);
+                setVisible(false);
+            }
+        });
+        bottomPanel.add(exitButton);
+
+        // Add panels to frame
+        add(topPanel, BorderLayout.NORTH);
+        add(boardPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+    private void  fillBoard()
+    {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 board[i][j] = new JButton();
@@ -68,33 +90,16 @@ public class GamePanel extends JFrame {
                             }
                         }
                         makeMove(row, column);
+
+                        // Check for win or tie
+                        checkStatus();
                     }
                 });
                 boardPanel.add(board[i][j]);
             }
         }
-
-        // Create bottom panel with exit button
-        bottomPanel = new JPanel();
-        exitButton = new JButton("ÇIKIŞ");
-        exitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                EntrancePanel.frame.setVisible(true);
-                setVisible(false);
-            }
-        });
-        bottomPanel.add(exitButton);
-
-        // Add panels to frame
-        add(topPanel, BorderLayout.NORTH);
-        add(boardPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        // Initialize game variables and start new game
-
-        gameBoard = new Player[ROWS][COLUMNS];
-        //newgame()
     }
+
 
     private void makeMove(int row, int column) {
         // Check if column is full
@@ -114,19 +119,21 @@ public class GamePanel extends JFrame {
             return;
         }
 
-        // Update button color and switch players
-        if (currentPlayer == PLAYER1) {
-            board[rowToPlace][column].setBackground(PLAYER1.getPlayerColor());
-            currentPlayer = PLAYER2;
-            playerLabel.setText(PLAYER2.getPlayerName());
-        } else {
-            board[rowToPlace][column].setBackground(PLAYER2.getPlayerColor());
-            currentPlayer = PLAYER1;
-            playerLabel.setText(PLAYER1.getPlayerName());
-        }
+        updateCurrentPlayer(rowToPlace, column);
+    }
 
-        // Check for win or tie
+    private void updateCurrentPlayer(int row, int column)
+    {
+        board[row][column].setBackground(currentPlayer.getPlayerColor());
+        currentPlayer.numberOfMoveLeftdec();
+        currentPlayer = nextPlayer;
+        nextPlayer = currentPlayer.equals(PLAYER1) ? PLAYER2 : PLAYER1;
+        playerLabel.setText(currentPlayer.getPlayerName());
+        playerLabel.setForeground(currentPlayer.getPlayerColor());
+    }
 
+    private void checkStatus()
+    {
         Player winner = checkWin();
         if (winner != null) {
             String message = winner.getPlayerName().toUpperCase() + " KAZANDI!";
@@ -138,7 +145,6 @@ public class GamePanel extends JFrame {
             EntrancePanel.frame.setVisible(true);
             setVisible(false);
         }
-
     }
 
     private Player checkWin() {
@@ -184,23 +190,68 @@ public class GamePanel extends JFrame {
             }
         }
 
-        // No winner
         return null;
     }
     private boolean checkTie()
     {
         for (int i = 0; i < ROWS; i++)
             for (int j = 0; j < COLUMNS; j++)
-                if (gameBoard[i][j] == null)
+                if (gameBoard[i][j] != null ||
+                        PLAYER1.getNumOfMoveLeft() != 0 && PLAYER2.getNumOfMoveLeft() != 0)
                     return false;
         return true;
     }
-
-    private void record()
+    Player getCurrentPlayer()
     {
-        
+        return currentPlayer;
     }
 
+    void setCurrentPlayer(Player player)
+    {
+        currentPlayer = player;
+    }
 
+    Player getNextPlayer()
+    {
+        return nextPlayer;
+    }
 
+    void setNextPlayer(Player player)
+    {
+        nextPlayer = player;
+    }
+    Player [][] getGameBoard()
+    {
+        return gameBoard;
+    }
+
+    static int getRow()
+    {
+        return ROWS;
+    }
+    static int getCol()
+    {
+        return COLUMNS;
+    }
+    static Color getEmptyCellColor()
+    {
+        return EMPTY_CELL_COLOR;
+    }
+    JButton [][] getBoard()
+    {
+        return board;
+    }
+    JLabel getPlayerLabel()
+    {
+        return playerLabel;
+    }
+    NewGame() {
+
+        setFrame();
+        addComponent();
+        setPlayer();
+        fillBoard();
+
+        gameBoard = new Player[ROWS][COLUMNS];
+    }
 }

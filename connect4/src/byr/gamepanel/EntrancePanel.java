@@ -1,15 +1,15 @@
-package byr.gui;
+package byr.gamepanel;
 
 import javax.swing.*;
 import java.awt.event.*;
 
-import static byr.gui.Player.PLAYER1;
-import static byr.gui.Player.PLAYER2;
+import static byr.gamepanel.Player.PLAYER1;
+import static byr.gamepanel.Player.PLAYER2;
 
 public class EntrancePanel extends JFrame implements ActionListener {
     static JFrame frame;
 
-    static GamePanel gamePanel;
+    static NewGame gamePanel;
     private JTextField pName1, pName2;
     private JButton newGame, contGame, exitGame;
 
@@ -63,13 +63,12 @@ public class EntrancePanel extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == newGame) {
             setPlayer();
-            gamePanel = new GamePanel();
+            gamePanel = new NewGame();
             gamePanel.setVisible(true);
             this.setVisible(false);
 
         } else if (e.getSource() == contGame) {
-            ContinueGamePanel cgp = new ContinueGamePanel();
-            cgp.setVisible(true);
+                ParseGame.parse();
             this.setVisible(false);
         } else if (e.getSource() == exitGame) {
             System.exit(0);
