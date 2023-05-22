@@ -89,10 +89,10 @@ public class NewGame extends JFrame {
                                 }
                             }
                         }
+
                         makeMove(row, column);
-                        RecordGame.run();
-                        // Check for win or tie
-                        checkStatus();
+                        if (!checkStatus())
+                            RecordGame.run();
                     }
                 });
                 boardPanel.add(board[i][j]);
@@ -132,7 +132,7 @@ public class NewGame extends JFrame {
         playerLabel.setForeground(currentPlayer.getPlayerColor());
     }
 
-    private void checkStatus()
+    private boolean checkStatus()
     {
         Player winner = checkWin();
         if (winner != null) {
@@ -140,11 +140,17 @@ public class NewGame extends JFrame {
             JOptionPane.showMessageDialog(this, message);
             EntrancePanel.frame.setVisible(true);
             setVisible(false);
+
+            return true;
         } else if (checkTie()) {
             JOptionPane.showMessageDialog(this, "OYUN BERABERE!");
             EntrancePanel.frame.setVisible(true);
             setVisible(false);
+
+            return true;
         }
+
+        return false;
     }
 
     private Player checkWin() {
