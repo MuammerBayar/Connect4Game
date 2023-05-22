@@ -14,7 +14,7 @@ import static byr.gamepanel.Player.PLAYER2;
 
 public class ParseGame {
     private static Player [][] gameBoard;
-    private static final String filePath = System.getProperty("user.home");
+    private static final String filePath = System.getProperty("user.dir");
     private ParseGame()
     {
     }
@@ -28,8 +28,6 @@ public class ParseGame {
 
         int player1RGB = PLAYER1.getPlayerColor().getRGB();
 
-        System.out.println("Parse.getBoardRecord()");
-
         try {
             FileReader fileReader = new FileReader(fullFilePath);
             BufferedReader bReader = new BufferedReader(fileReader);
@@ -38,7 +36,6 @@ public class ParseGame {
             String line;
             while ((line = bReader.readLine()) != null) {
                 setBoard(line, player1RGB, board);
-                System.out.println(line);
             }
 
             bReader.close();
@@ -73,8 +70,6 @@ public class ParseGame {
         String fileName = "hamle.txt";
         String fullFilePath = filePath + File.separator + fileName;
 
-        System.out.println("Parse.getPlayerRecord()");
-
         try {
             FileReader fileReader = new FileReader(fullFilePath);
             BufferedReader bReader = new BufferedReader(fileReader);
@@ -93,33 +88,32 @@ public class ParseGame {
         }
     }
 
+    private static void setPlayerInfos(Player player, String [] playerInfos)
+    {
+        player.setPlayerName(playerInfos[1]);
+        Color color = Color.RED.getRGB() == Integer.parseInt(playerInfos[2]) ? Color.RED : Color.YELLOW;
+        player.setPlayerColor(color);
+        player.setNumOfMoveLeft(Integer.parseInt(playerInfos[3]));
+    }
+
     private static void setPlayer(String playerInfoStr)
     {
-        Player player;
         String [] playerInfos = playerInfoStr.split("[|]+");
         int idx  = Integer.parseInt(playerInfos[0]);
 
         if (idx == 1) {
             JLabel playerLabel = gamePanel.getPlayerLabel();
-            player = playerInfos[1].equals(PLAYER1.getPlayerName()) ? PLAYER1 : PLAYER2;
-            gamePanel.setCurrentPlayer(player);
-            playerLabel.setText(player.getPlayerName());
-            playerLabel.setForeground(player.getPlayerColor());
+
+            setPlayerInfos(PLAYER1,playerInfos);
+
+            gamePanel.setCurrentPlayer(PLAYER1);
+            playerLabel.setText(PLAYER1.getPlayerName());
+            playerLabel.setForeground(PLAYER1.getPlayerColor());
 
         } else if (idx == 2) {
-            player = playerInfos[1].equals(PLAYER1.getPlayerName()) ? PLAYER1 : PLAYER2;
-            gamePanel.setNextPlayer(player);
+            setPlayerInfos(PLAYER2,playerInfos);
+            gamePanel.setNextPlayer(PLAYER2);
         }
-        else
-            return;
-
-        player.setPlayerName(playerInfos[1]);
-
-        Color color = Color.RED.getRGB() == Integer.parseInt(playerInfos[2]) ? Color.RED : Color.YELLOW;
-        player.setPlayerColor(color);
-        player.setNumOfMoveLeft(Integer.parseInt(playerInfos[3]));
-
-
     }
     public static void parse()
     {
@@ -127,7 +121,6 @@ public class ParseGame {
 
         getPlayerRecord();
         getBoardRecord();
-
 
         gamePanel.setVisible(true);
     }

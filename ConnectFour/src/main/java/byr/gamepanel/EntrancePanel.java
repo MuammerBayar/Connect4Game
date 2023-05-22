@@ -1,7 +1,8 @@
 package byr.gamepanel;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static byr.gamepanel.Player.PLAYER1;
 import static byr.gamepanel.Player.PLAYER2;

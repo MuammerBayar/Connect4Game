@@ -9,7 +9,7 @@ import static byr.gamepanel.EntrancePanel.gamePanel;
 
 public class RecordGame {
     private static Player [][] gameBoard;
-    private static final String filePath = System.getProperty("user.home");
+    private static final String filePath = System.getProperty("user.dir");
     private RecordGame()
     {
     }
@@ -18,20 +18,14 @@ public class RecordGame {
     {
         String fileName = "tahta.txt";
         String fullFilePath = filePath + File.separator + fileName;
-
         int row = NewGame.getRow();
         int col = NewGame.getCol();
 
         try {
             File file = new File(fullFilePath);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
 
             FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bWriter = new BufferedWriter(fileWriter);
-
-            System.out.println("Record.recordBoard()");
 
             for (int i = 0; i < row; ++i) {
                 for (int j = 0; j < col; ++j) {
@@ -44,9 +38,6 @@ public class RecordGame {
             }
             bWriter.close();
             fileWriter.close();
-
-            System.out.println("tahta başarıyla kaydedildi.");
-
         } catch (IOException e) {
             System.out.println("Hata oluştu: " + e.getMessage());
         }
@@ -58,14 +49,9 @@ public class RecordGame {
 
         Player currentPlayer  =  gamePanel.getCurrentPlayer();
         Player nextPlayer = gamePanel.getNextPlayer();
-        System.out.println("Record.recordPlayer()");
 
         try {
             File file = new File(fullFilePath);
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
 
             FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bWriter = new BufferedWriter(fileWriter);
@@ -75,8 +61,6 @@ public class RecordGame {
 
             bWriter.close();
             fileWriter.close();
-
-            System.out.println("hamle başarıyla kaydedildi.");
 
         } catch (IOException e) {
             System.out.println("Hata oluştu: " + e.getMessage());

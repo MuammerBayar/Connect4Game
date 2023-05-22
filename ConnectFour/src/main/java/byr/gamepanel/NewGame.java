@@ -1,10 +1,10 @@
 package byr.gamepanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-import javax.swing.*;
 
 import static byr.gamepanel.Player.PLAYER1;
 import static byr.gamepanel.Player.PLAYER2;
@@ -90,7 +90,7 @@ public class NewGame extends JFrame {
                             }
                         }
                         makeMove(row, column);
-
+                        RecordGame.run();
                         // Check for win or tie
                         checkStatus();
                     }
