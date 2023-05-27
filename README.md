@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="/media/connect-four.png" alt="Project logo"></a>
+ <img width=200px height=200px src="ConnectFour/media/connect-four.png" alt="Project logo"></a>
 </p>
 
 <h3 align="center">Connect Four Game</h3>
