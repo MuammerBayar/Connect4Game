@@ -24,6 +24,10 @@ public class RecordGame {
         try {
             File file = new File(fullFilePath);
 
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
             FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bWriter = new BufferedWriter(fileWriter);
 
@@ -52,6 +56,10 @@ public class RecordGame {
 
         try {
             File file = new File(fullFilePath);
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
 
             FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bWriter = new BufferedWriter(fileWriter);
