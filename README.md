@@ -68,10 +68,10 @@ $ git clone https://github.com/MuammerBayar/Connect4Game
 ```
 
 Go to the directory where the jar file is located
-<p> note: please complete the beginning of the path correctly </p>
+<p> note: please complete the beginning of the path </p>
 
 ```
-$ cd  /connect4game/ConnectFour 
+$ cd  /Connect4Game/ConnectFour 
 ```
 
 Running the Jar file
